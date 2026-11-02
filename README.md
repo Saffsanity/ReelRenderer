@@ -52,18 +52,21 @@ The commands (`main.swift` has them all):
 | `typecheck [--from s] [--to s] [--every n] [--threshold px] [--report f] [--dump f.tsv] [--verbose]` | every glyph of the frames measured against its path (The type); exit 1 if one strays more than 0.1 px |
 | `render … --typecheck [n]` | the same check on every n-th frame of a render, which then fails (exit 1) if it fails |
 | `typetest [--out f.mp4] [--seconds 3] [--typecheck] [--frames dir] [--no-video]` | two moving lines on the reel's stage, rendered and checked |
-| `assets <dir> [prefix …]`, `assets --report`, `assets --motion` | the 0.6.0 drawn assets as PNG stills at their key times (with `index.png`), the cutaway's numbers, its motion check |
+| `assets <dir> [prefix …]`, `assets --report`, `assets --motion`, `assets --splat <dir>` | the 0.6 drawn assets as PNG stills at their key times (with `index.png`), the cutaway's numbers, its motion check, the bug's splat (`splat.png`, `splat-strip.png`: 12 frames about the hit) |
+| `retime` | (`REEL=060`) each scene's time map (Retime060.swift): its segments, rates and dwells, and the beat each statement and event lands on |
+| `holds [--from s] [--to s] [--every n]` | (`REEL=060`) every line of words against the reading rule (0.22 s a word + 0.9 s after it is in, never under 2.0 s), measured on the builders' type frame by frame; exit 1 if one is short |
 | `clearance [--from s] [--to s] [--every n] [--min px]` | how close each line of type comes to what is drawn beside it (a device, a macro), per shot; exit 1 under `--min` (80 px, v2 S23's rule) |
 | `derived <dir> <name>…` | 0.6.0's derived stills (`L0w`, `N1x`, `D1x`, `qtv`, …: Reel060.swift, Retouch060.swift) as PNG |
 
 `Scripts/pipeline.sh` runs the delivery steps v3.1 ran (score, render, mux, the poster still at 75.2 s, finalize,
-verify, sheet) into `work/v31/out/` (with `REEL=060`, the 0.6.0 video into `work/060/out/`, its poster at 77.2 s),
+verify, sheet) into `work/v31/out/` (with `REEL=060`, the 0.6 video into `work/060/out/`, its poster at 133.2 s),
 under `taskpolicy -c utility`, and since 0.6.0 its render type-checks every frame (The type). On a Mac where Sill.app
 runs, it encodes only while no device is connected to it: with `SILL_DIR` naming a Sill checkout (or `NO_DEVICE`
 naming the script), it runs Sill's `Scripts/encoder-check/no-device.sh` before each encoding step, waits for a device
 to leave, and pauses a running step while one connects; without either, the steps run at once. A whole v3.1 render
 takes about 4 minutes on an M2 Pro (20.9 fps for 4,992 frames), and the check about 7 minutes more (11.9 frames/s);
-the 0.6.0 film with its check takes about 650 s (646 s at 7.4 fps for 4,800 frames in its last delivery run).
+the 0.6.0 film with its check takes about 650 s (646 s at 7.4 fps for 4,800 frames in v4's last delivery run), and
+v4.1's 139.2 s, 8,352 frames, about 19 minutes.
 
 ### Inputs
 
@@ -199,12 +202,22 @@ leaves that type alone (it is in both of its renders), and `assets --motion` che
 draws its fix lines with `FixesType060` (`Shots060Mac.swift`) on `GlyphCanvas`, so `typecheck` measures them; the
 previews' `FixesColumn060` still draws them itself.
 
-## The 0.6.0 update video (`REEL=060`)
+## The 0.6 update video (`REEL=060`)
 
-`REEL=060` selects the 0.6.0 update video (80.0 s, 4,800 frames, 23 shots on 50 bars) in place of v3.1, which stays
-the default and renders as before (`ReelCut`, `Look.swift`). `Stage`, `Timeline.shots`, the score (`Score060.swift`),
-the sheet's tiles and title, `verify`'s silence window (71.40–72.00) and true-black frame (4790), and the movie's
-title follow it. Its shot list is `design/reel/v4/SHOTLIST-0.6.0.md`.
+`REEL=060` selects the 0.6 update video in place of v3.1, which stays the default and renders as before (`ReelCut`,
+`Look.swift`). `Stage`, `Timeline.shots`, the score (`Score060.swift`), the sheet's tiles and title, `verify`'s silence
+window and true-black frame, and the movie's title follow it. v4 (80.0 s, 4,800 frames, 50 bars) is
+`design/reel/v4/SHOTLIST-0.6.0.md`; v4.1, Noah's notes of 2026-11-02 (slower transitions, words held long enough to read,
+S05's third line, the bug's splat, "0.6"), is 139.2 s, 8,352 frames, 87 bars, and its shot list is
+`design/reel/v4.1/SHOTLIST-0.6.md`: verify's silence window 122.20–123.20, its true-black frame 8340.
+
+v4.1 plays v4's builders through a time map per scene (`Retime060.swift`): film time T → the builder's v4 time t, every
+segment at 0.8 v4 seconds per film second (all motion 1.25× slower) but the dwells, quiet moments held longer so the
+words read and statements land on beats (each dwell eases its speed inside itself, so the 1.25× segments and the
+anchors stay exact), and S16's hold ring, a 0.5 s timer the words name, in real time. Continuous camera motion runs on
+film time (`Env.glide`), as do S06's movie and arcs and S08's spinner; the cutaway (S19–S20) is timed natively in film
+time, its bug's splat in `Splat060` (`Assets060Fixes.swift`). The score's cues are their events' film times
+(`Retime060.film`). `retime` prints the maps; `holds` measures the reading rule on the frames.
 
 | File | What it holds |
 |---|---|
@@ -217,6 +230,8 @@ title follow it. Its shot list is `design/reel/v4/SHOTLIST-0.6.0.md`.
 | `Assets060*.swift` | the drawn assets (the bug, the lock screen, the keyboards, the arcs, the iPhone, the iMac) and `assets` |
 | `Retouch060.swift` | the stills' retouches (Weather's places, the iPhone's "This iPhone" and Aa "1×") and QuickTime Player's window, drawn |
 | `Clearance060.swift` | `clearance`: the words' distance from the devices beside them |
+| `Retime060.swift` | v4.1: the time maps (`SceneMap060`), the plan scene by scene, `ShotClock` and `Env.glide`, and `retime` |
+| `Holds060.swift` | v4.1: `holds`, the reading rule measured on the builders' type (`TypeRecorder`) |
 
 Its inputs under `reelDir` are `stills/`, `pictures/` and `thumbs/`, the footage stand-ins (harness screenshots and
 drawn Mac pictures, each made as their own README says), and `v31film/Sill-sizzle-v3.1-silent.mp4`, the delivered
