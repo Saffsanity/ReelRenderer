@@ -11,7 +11,7 @@ import Foundation
 
 /// The reel's inputs (clips, stills, previews, S18's assets) and its default output folder: `REEL_DIR` when it is
 /// set, else `work/` beside Package.swift (ignored by git: real footage never goes in the repository).
-/// Recovered: v3.1 named the session scratchpad that held it here (Tools/ReelRenderer/README.md).
+/// Recovered: v3.1 named the scratch folder that held it here (README.md, Where it came from).
 let reelDir: URL = {
     if let dir = ProcessInfo.processInfo.environment["REEL_DIR"], !dir.isEmpty {
         return URL(fileURLWithPath: dir, isDirectory: true)

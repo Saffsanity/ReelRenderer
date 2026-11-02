@@ -1,56 +1,40 @@
 # ReelRenderer
 
-The renderer of Sill's sizzle reel. It draws every frame of the film in code (devices, type, the app icon, the
-sill line, the glow, a drawn pointer and touch dots) around clips and stills of the real app, writes a 1080p60
-H.264 MP4 with Apple's software encoder, synthesises the score, and checks what it delivers. Apple frameworks
-only: SwiftUI's `ImageRenderer`, Core Graphics, Core Image, AVFoundation and AVAudioEngine. No ffmpeg, no
+ReelRenderer is the video renderer of [Sill](https://github.com/Saffsanity/sill), the free, open-source app by Noah
+Saffer that streams individual Mac app windows to iPhone and iPad ([getsill.app](https://getsill.app)). It draws every
+frame of a film in code (devices, type, the app icon, the sill line, the glow, a drawn pointer and touch dots) around
+clips and stills of the real app: SwiftUI scenes rendered with `ImageRenderer` and composed with Core Graphics and
+Core Image, written as 1080p60 H.264 with AVFoundation and Apple's software encoder. It synthesises the score and
+checks what it delivers. The type is drawn as glyph outlines at the exact positions the motion gives it, and
+`typecheck` measures every glyph of every frame against its path (The type, below).
+
+Apple frameworks only: SwiftUI, Core Graphics, Core Text, Core Image, AVFoundation and AVAudioEngine. No ffmpeg, no
 Homebrew, no downloaded music or artwork.
 
-Its last render is v3.1 (2026-09-27): `design/reel/v3/Sill-sizzle-v3.1.mp4`, 83.2 s, 35 shots on a 150 BPM grid.
-`design/reel/` is not in git; its shot lists are the reel's design documents (below).
+## What it made
 
-## Where it came from
+- **Sill's launch video**, the sizzle reel (v3.1, 2026-09-27): 83.2 s, 35 shots on a 150 BPM grid. It is the
+  renderer's default cut.
+- **The update video for Sill 0.6** (`REEL=060`, November 2026), described in The 0.6.0 update video, below.
 
-The renderer was built in September 2026 by agent workflows in a scratch folder (v1 on 2026-09-24, then v2, v3
-and v3.1), and that folder was later wiped. On 2026-10-29 it was rebuilt from the tool calls that wrote it, which
-the sessions' transcripts keep, replayed in order: every `Write` and `Edit`, and every `Bash` heredoc, `sed`,
-`perl`, copy and Python edit script. The result is v3.1 byte for byte: its Swift sources have the checksum the
-transcript recorded for them right after the delivery render (`md5 -q Sources/ReelRenderer/*.swift | md5` =
-`bf9fc2b0546adf8c84832cbfcfb3b9c2` before the three changes below), it builds unchanged, and frames it renders
-match the delivered film's to within the encoder's noise (PSNR 51–53 dB). The record of the recovery, file by
-file, is kept outside the repository with the rest of the reel's working files.
+The films' footage, the delivered films and their shot lists (the films' design documents) are not in this repository
+(Sill's scenes and footage, below). With the placeholders, every shot of the launch video renders without them.
 
-This copy differs from the recovered v3.1 in three places (and since 2026-11-02 in its type, drawn as glyph outlines on
-its exact path, The type below, so frames with type no longer match v3.1's bit for bit):
-- `Clip.swift`: `reelDir`, the folder the inputs are read from, is `REEL_DIR` when set, else `work/` beside
-  `Package.swift`. v3.1 named the scratch folder.
-- `Timeline.swift`: one comment no longer lists the names of the files a privacy blur covered in a clip.
-- `Package.swift`: its comment says where the package lives now.
+## Requirements
 
-## Proof of reproduction
-
-On 2026-10-29 every clip and still the reel reads was reconstituted from the delivered v3.1 film itself (the
-originals are gone) and the whole reel rendered again by `Scripts/pipeline.sh`, unchanged, with the software
-encoder: 1,729 of its 4,992 frames decode identically to the delivered film's (every frame of S01–S05, S20 and
-S29–S35, and S21's first; the drawn frames of S22 and S28, coded after footage, differ by at most 11 and 3 levels),
-the poster and the score are the delivered ones byte for byte and sample for sample, and the footage, solved back out
-of the delivered H.264, comes to 44.7 dB, for 50.8 dB mean PSNR over the 3,263 frames that are not identical (49.8 dB
-pooled over all 4,992; 36.4 dB at the worst frame). A second check the same day, with tools of its own, recomputed
-every frame's numbers and the score and rendered two shots again from this branch: S02 bit for bit, and S10, from its
-input rebuilt bit for bit, within 1 dB of the reproduced film on every frame. The method, every shot's numbers, the
-check, side-by-side sheets and the reproduced films are on Noah's Mac in
-`~/Downloads/sill-handoff/reel/reproduction/REPRODUCTION.md`, kept there like the delivered reel, which shows his own
-windows.
+- A Mac with macOS 14 or later, and Xcode with Swift 5.9 or later: all `Package.swift` asks for. ReelRenderer has
+  only been built and rendered on macOS 27 with Xcode 27, on Apple silicon (an M2 Pro: the times below are its).
+- Nothing else: no package dependencies, nothing to install. The type's fonts (the system font, and macOS's own
+  fallback fonts for Chinese, Japanese and Korean) come with macOS.
 
 ## Build and run
 
 ```
-cd Tools/ReelRenderer
-swift build -c release                     # about 30 s; one deprecation warning (CIColorKernel)
+swift build -c release                     # about 30 s; warns of CIColorKernel's deprecation and 8 needless trys (Reel060.swift)
 swift Scripts/placeholders.swift work      # stand-in inputs, so any shot renders (below)
-taskpolicy -c utility .build/release/ReelRenderer stills /tmp/reel 1.0 75.2 80.5     # PNG frames at reel times
-taskpolicy -c utility .build/release/ReelRenderer render --from 78.4 --to 82.0 --out /tmp/reel/duo.mp4
-swift Scripts/check.swift info /tmp/reel/duo.mp4                 # duration, size, rate, frames
+taskpolicy -c utility .build/release/ReelRenderer stills out/reel 1.0 75.2 80.5      # PNG frames at reel times
+taskpolicy -c utility .build/release/ReelRenderer render --from 78.4 --to 82.0 --out out/reel/duo.mp4
+swift Scripts/check.swift info out/reel/duo.mp4                 # duration, size, rate, frames
 ```
 
 The commands (`main.swift` has them all):
@@ -64,7 +48,7 @@ The commands (`main.swift` has them all):
 | `finalize [--cover p.png [--poster-out p.jpg]] <movie>…` | no video edit list, cover art, `moov` first |
 | `verify <movie> [<silent>]` | format, colour, frame timing, edit lists, audio levels and the silence, the true-black frame and the hero frame |
 | `sheet <movie> <out.png>` | the contact sheet, one tile per shot |
-| `icon-check <reference.png> <out.png>` | the drawn icon against a render of `design/AppIcon.svg` |
+| `icon-check <reference.png> <out.png>` | the drawn icon against a render of Sill's `design/AppIcon.svg` |
 | `typecheck [--from s] [--to s] [--every n] [--threshold px] [--report f] [--dump f.tsv] [--verbose]` | every glyph of the frames measured against its path (The type); exit 1 if one strays more than 0.1 px |
 | `render … --typecheck [n]` | the same check on every n-th frame of a render, which then fails (exit 1) if it fails |
 | `typetest [--out f.mp4] [--seconds 3] [--typecheck] [--frames dir] [--no-video]` | two moving lines on the reel's stage, rendered and checked |
@@ -74,11 +58,12 @@ The commands (`main.swift` has them all):
 
 `Scripts/pipeline.sh` runs the delivery steps v3.1 ran (score, render, mux, the poster still at 75.2 s, finalize,
 verify, sheet) into `work/v31/out/` (with `REEL=060`, the 0.6.0 video into `work/060/out/`, its poster at 77.2 s),
-under `taskpolicy -c utility`, encoding only while no device is connected to Sill.app (the repository's
-`Scripts/encoder-check/no-device.sh`: it waits for one to leave, and pauses a running step while one connects), and
-since 0.6.0 its render type-checks every frame (The type). A whole v3.1 render takes about 4 minutes on an M2 Pro
-(20.9 fps for 4,992 frames), and the check about 7 minutes more (11.9 frames/s); the 0.6.0 film with its check takes
-about 650 s (646 s at 7.4 fps for 4,800 frames in its last delivery run).
+under `taskpolicy -c utility`, and since 0.6.0 its render type-checks every frame (The type). On a Mac where Sill.app
+runs, it encodes only while no device is connected to it: with `SILL_DIR` naming a Sill checkout (or `NO_DEVICE`
+naming the script), it runs Sill's `Scripts/encoder-check/no-device.sh` before each encoding step, waits for a device
+to leave, and pauses a running step while one connects; without either, the steps run at once. A whole v3.1 render
+takes about 4 minutes on an M2 Pro (20.9 fps for 4,992 frames), and the check about 7 minutes more (11.9 frames/s);
+the 0.6.0 film with its check takes about 650 s (646 s at 7.4 fps for 4,800 frames in its last delivery run).
 
 ### Inputs
 
@@ -107,13 +92,13 @@ It also writes S18's finger path, `v3tools/pointer-path.txt`, which is no stand-
 while clip 13 was recorded (its own script wrote it), byte for byte the file v3.1 read. S18 does not render
 without it.
 
-The Mac's previews (S26's pairing window) come from the bare `SillMenuBar` binary, never from a built `Sill.app` or
-the executable inside it: macOS registers such a copy in place of the installed app, and its permissions and login
-item go with it. The bare binary records the deployment target as its SDK, so it draws the look of macOS before 26;
-v3's previews came from a copy with the current SDK recorded:
+The Mac's previews (S26's pairing window) come from Sill's bare `SillMenuBar` binary, built in a Sill checkout, never
+from a built `Sill.app` or the executable inside it: macOS registers such a copy in place of the installed app, and its
+permissions and login item go with it. The bare binary records the deployment target as its SDK, so it draws the look
+of macOS before 26; v3's previews came from a copy with the current SDK recorded:
 
 ```
-swift build -c release                                        # at the repository's root
+swift build -c release                                        # in a Sill checkout
 xcrun vtool -set-build-version macos 14.0 "$(xcrun --sdk macosx --show-sdk-version)" \
     -output /tmp/SillMenuBar .build/release/SillMenuBar && codesign -s - -f /tmp/SillMenuBar
 /tmp/SillMenuBar -SillRenderPreviews /tmp/previews            # no permission needed; defaults domain SillMenuBar
@@ -123,7 +108,8 @@ xcrun vtool -set-build-version macos 14.0 "$(xcrun --sdk macosx --show-sdk-versi
 
 The shot list came first: `design/reel/SHOTLIST.md` (v1), `v2/SHOTLIST-v2.md` (Noah's notes applied) and
 `v3/SHOTLIST-v3.md` (the remote beats, then v3.1's smooth pointer in its §11). Each version of the renderer
-implements its shot list; the code names the shot list's sections in its comments.
+implements its shot list; the code names the shot list's sections in its comments. The shot lists are kept with the
+delivered films, outside this repository.
 
 - `Timeline.swift` is the timeline table in code: one `Shot(id:start:end:source:clip:build:)` per row, the reel
   in four acts on bar lines (0, 9.6, 28.8, 65.6 s), every cut on a beat (0.4 s), and the clips' in-points set so
@@ -134,7 +120,7 @@ implements its shot list; the code names the shot list's sections in its comment
   layers.
 - `Look.swift` has the canvas (1920×1080, 60 fps, 4,992 frames), the palette, the easings, the type styles and
   every line of copy. `TypeViews.swift` snaps words in on their beat; `Device.swift` draws the devices, touch
-  dots, the glow and the sill line; `Icon.swift` draws the app icon from `design/AppIcon.svg`'s shapes;
+  dots, the glow and the sill line; `Icon.swift` draws the app icon from Sill's `design/AppIcon.svg`'s shapes;
   `Stacks.swift` places devices in 3D; `Pending.swift` is v2's placeholder card for shots waiting on a capture.
 - `Render.swift` composes each frame (SwiftUI into IOSurface buffers, then Core Image for the rack focus, the dim,
   the grain, the vignette and the dither, all seeded, so a frame renders the same every time) and writes the
@@ -240,8 +226,8 @@ Weather frame behind S07–S08 (15.9 s, its saved places retouched: `Retouch060.
 and the times it must meet, and the shot list's §7 has the steps.
 
 ```
-cd Tools/ReelRenderer && swift build -c release
-REEL=060 REEL_DIR=<inputs> Scripts/pipeline.sh     # encodes only while no device is connected to Sill.app
+swift build -c release
+REEL=060 REEL_DIR=<inputs> SILL_DIR=<a Sill checkout> Scripts/pipeline.sh   # encodes only while no device is connected to Sill.app
 ```
 
 ## The shot list
@@ -304,15 +290,57 @@ A shot list (`design/reel/v3/SHOTLIST-v3.md` is the model) has:
 ## What it needs from a person
 
 - **Real clips.** Recordings of the client streaming real apps from a real Mac, with the apps chosen and their
-  contents cleared for privacy by the person whose Mac it is. An agent cannot make them: they need the person's
-  Mac and its permissions, and a time when Sill.app is not streaming.
+  contents cleared for privacy by the person whose Mac it is. Only that person can make them: they need their Mac
+  and its permissions, and a time when Sill.app is not streaming.
 - **Approval** of the shot list's copy, the privacy treatments and the cut.
 
-## Not part of the app
+## Where it came from
 
-`Tools/ReelRenderer` is a Swift package of its own. The root `Package.swift` names its targets' folders under
-`Sources/`, so `swift build` in the repository, Xcode's iOS project and every workflow leave this one alone. CI's
-`paths-ignore` lists `Tools/ReelRenderer/**` too, so a change here alone starts no CI run. Its `.build/` and
-`work/` are ignored by git.
+The renderer was written in September 2026 for Sill's launch video (v1 on 2026-09-24, then v2, v3 and v3.1), in a
+scratch folder that was later wiped. On 2026-10-29 it was rebuilt from the record of every edit that made it, replayed
+in order: every file written and every edit, and every shell heredoc, `sed`, `perl`, copy and Python edit script. The
+result is v3.1 byte for byte: its Swift sources have the checksum recorded for them right after the delivery render
+(`md5 -q Sources/ReelRenderer/*.swift | md5` = `bf9fc2b0546adf8c84832cbfcfb3b9c2` before the three changes below), it
+builds unchanged, and frames it renders match the delivered film's to within the encoder's noise (PSNR 51–53 dB). The
+record of the recovery, file by file, is kept outside the repository with the rest of the reel's working files.
 
-The license is the repository's, Apache-2.0.
+This copy differs from the recovered v3.1 in three places (since 2026-11-02 also in its type, drawn as glyph outlines
+on its exact path, The type above, so frames with type no longer match v3.1's bit for bit; and since the split,
+History below, in the wording of a few comments):
+- `Clip.swift`: `reelDir`, the folder the inputs are read from, is `REEL_DIR` when set, else `work/` beside
+  `Package.swift`. v3.1 named the scratch folder.
+- `Timeline.swift`: one comment no longer lists the names of the files a privacy blur covered in a clip.
+- `Package.swift`: its comment says where the package lives now.
+
+## Proof of reproduction
+
+On 2026-10-29 every clip and still the reel reads was reconstituted from the delivered v3.1 film itself (the
+originals are gone) and the whole reel rendered again by `Scripts/pipeline.sh`, unchanged, with the software
+encoder: 1,729 of its 4,992 frames decode identically to the delivered film's (every frame of S01–S05, S20 and
+S29–S35, and S21's first; the drawn frames of S22 and S28, coded after footage, differ by at most 11 and 3 levels),
+the poster and the score are the delivered ones byte for byte and sample for sample, and the footage, solved back out
+of the delivered H.264, comes to 44.7 dB, for 50.8 dB mean PSNR over the 3,263 frames that are not identical (49.8 dB
+pooled over all 4,992; 36.4 dB at the worst frame). A second check the same day, with tools of its own, recomputed
+every frame's numbers and the score and rendered two shots again from these sources: S02 bit for bit, and S10, from its
+input rebuilt bit for bit, within 1 dB of the reproduced film on every frame. The method, every shot's numbers, the
+check, side-by-side sheets and the reproduced films are kept outside the repository, like the delivered reel, which
+shows Noah's own windows.
+
+## Sill's scenes and footage
+
+The engine is general: the compositor (`Render.swift`, `Stacks.swift`), the type and its check (`GlyphText.swift`,
+`TypeViews.swift`, `TypeCheck.swift`), the clip reader (`Clip.swift`), the score's synthesiser (`Score.swift`) and the
+delivery tools (`Deliver.swift`, `Scripts/`). The scenes are Sill's: the shots, their copy, the drawn devices and
+Sill's icon were made for Sill's videos, and the footage, screenshots and stills they frame are Sill's, kept out of
+this repository (`work/` is ignored by git). Sill itself is at
+[github.com/Saffsanity/sill](https://github.com/Saffsanity/sill) and [getsill.app](https://getsill.app).
+
+## History
+
+ReelRenderer grew inside Sill's repository as `Tools/ReelRenderer` and was split out of it on 2026-11-02 with its
+history: the commits that touched that folder, their paths made relative to it. Their messages name Sill's issues and
+pull requests by number: the first commit's #60 is Sill's issue asking for this renderer to be open source.
+
+## License
+
+The Apache License 2.0, as Sill's: see [LICENSE](LICENSE).

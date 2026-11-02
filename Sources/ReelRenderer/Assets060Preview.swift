@@ -9,7 +9,7 @@ import SwiftUI
 @MainActor enum Preview060 {
     struct Still { let name: String; let t: Double; let layers: FrameLayers; let note: String }
 
-    /// The footage stand-ins (`REEL060_FOOTAGE`, a folder with `stills/`, as the 0.6.0 footage agent made them):
+    /// The footage stand-ins (`REEL060_FOOTAGE`, a folder with `stills/`, as they were made for the 0.6.0 video):
     /// when set, the previews put the assets over those stills, as the film will; else over the drawn stand-in.
     static let footageDir: URL? = ProcessInfo.processInfo.environment["REEL060_FOOTAGE"].flatMap { $0.isEmpty ? nil : URL(fileURLWithPath: $0, isDirectory: true) }
     private static var loaded: [String: CGImage] = [:]

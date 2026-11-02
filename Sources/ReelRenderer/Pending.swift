@@ -8,7 +8,7 @@ struct PendingShot {
     let id: String              // N1…N3 (CAPTURE-REQUEST.md)
     let what: String            // the card's headline
     let detail: String          // what the clip must show
-    let file: String            // the file the capture agent writes (W/real-captures/…)
+    let file: String            // the file the capture is saved as (W/real-captures/…)
     let start: Double
     let duration: Double
     let portrait: Bool

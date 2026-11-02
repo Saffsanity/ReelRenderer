@@ -1,3 +1,6 @@
+# Build products.
+.build/
+.swiftpm/
 # The reel's inputs and renders: real footage, harness stills and films never go in the repository.
 work/
 out/
@@ -5,3 +8,4 @@ out/
 *.mov
 *.m4a
 *.wav
+.DS_Store

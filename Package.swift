@@ -1,7 +1,6 @@
 // swift-tools-version:5.9
-// Sill sizzle reel renderer. Apple frameworks only (SwiftUI ImageRenderer, Core Graphics, Core Image,
-// AVFoundation). Tools/ReelRenderer in the Sill repository: a package of its own, which the root Package.swift
-// does not name, so neither the app's build nor CI builds it (README.md).
+// ReelRenderer, the renderer of Sill's videos. Apple frameworks only (SwiftUI ImageRenderer, Core Graphics, Core Text,
+// Core Image, AVFoundation). It began as Tools/ReelRenderer in the Sill repository (README.md).
 import PackageDescription
 
 let package = Package(

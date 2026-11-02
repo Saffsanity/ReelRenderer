@@ -7,8 +7,9 @@
 #
 # Everything runs at utility priority with the renderer's software H.264 encoder: Sill.app may be streaming, and
 # it shares the Mac's one hardware video encoder. The script refuses the hardware encoder and the test switches,
-# and before each encoding step waits until no device is connected to Sill.app (the repository's
-# Scripts/encoder-check/no-device.sh, when it is there), pausing the step while one connects.
+# and before each encoding step waits until no device is connected to Sill.app (Sill's
+# Scripts/encoder-check/no-device.sh: NO_DEVICE, or the one in the Sill checkout SILL_DIR names), pausing the step
+# while one connects. Without either, the steps run at once.
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")/.." && pwd)
 export REEL_DIR=${REEL_DIR:-$HERE/work}
@@ -19,7 +20,7 @@ else
     OUT=$REEL_DIR/v31/out; POSTER_T=75.2; POSTER_PNG=poster/still-S32-75.200.png
 fi
 RR=$HERE/.build/release/ReelRenderer
-NO_DEVICE=${NO_DEVICE:-$HERE/../../Scripts/encoder-check/no-device.sh}
+NO_DEVICE=${NO_DEVICE:-${SILL_DIR:+$SILL_DIR/Scripts/encoder-check/no-device.sh}}
 # The renderer takes the hardware encoder whenever SILL_HW_ENCODER is set, to any value (Render.swift), empty included.
 [ -z "${SILL_HW_ENCODER+set}" ] || { echo "SILL_HW_ENCODER is set: refusing (the software encoder only)"; exit 1; }
 [ -z "${REEL_V31_NO_ARROW:-}${REEL_V31_FLAT:-}${REEL_V31_NO_GRAIN:-}" ] || { echo "a REEL_V31_ test switch is set: refusing"; exit 1; }
@@ -27,6 +28,7 @@ NO_DEVICE=${NO_DEVICE:-$HERE/../../Scripts/encoder-check/no-device.sh}
 [ -z "${REEL_TYPE_LEGACY+set}${REEL_TYPE_OFFSET+set}" ] || { echo "REEL_TYPE_LEGACY or REEL_TYPE_OFFSET is set: refusing"; exit 1; }
 # Waits (up to an hour, a look every 30 s) until no device is connected to Sill.app.
 guard_device() {
+    [ -n "$NO_DEVICE" ] || { echo "no no-device check (neither SILL_DIR nor NO_DEVICE is set): going on"; return 0; }
     [ -x "$NO_DEVICE" ] || { echo "no-device check not found at $NO_DEVICE: going on"; return 0; }
     for _ in $(seq 1 120); do
         if "$NO_DEVICE" > /dev/null 2>&1; then echo "no device connected to Sill.app ($(date +%H:%M:%S)): $1"; return 0; fi

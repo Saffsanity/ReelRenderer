@@ -111,7 +111,7 @@ struct ZoomedSheet060: View {
     }
 }
 
-// SWAP-IN (S09, take C): replace with Noah's clip C if provided at /Users/noah/Downloads/sill-handoff/release-060/captures/take-C.mov, inside Large060's iPad in place of
+// SWAP-IN (S09, take C): replace with Noah's clip C if provided as captures/take-C.mov, inside Large060's iPad in place of
 // C0 and the drawn zoom (Pinch060). Marks: the spread 29.25–29.9 (to about 3×), the two-finger move 30.3–30.9, the
 // tap 31.1, the pinch all the way out 31.55–32.25. Keep or drop the drawn touch dots to match the take's fingers.
 @MainActor func s060_09(_ t: Double, _ e: Env) throws -> FrameLayers {
@@ -202,7 +202,7 @@ struct PhoneLayers060: View {
     }
 }
 
-// SWAP-IN (S10, take D): replace with Noah's clip D if provided at /Users/noah/Downloads/sill-handoff/release-060/captures/take-D.mov (the iPhone, upright), inside
+// SWAP-IN (S10, take D): replace with Noah's clip D if provided as captures/take-D.mov (the iPhone, upright), inside
 // PhoneLayers060 in place of D1, D4/D5, D2 and D3. Marks: Settings tapped 33.15, the Larger Picture switch 33.75, Done
 // 34.15, the larger layout 34.3 (A5), the Mac's fit 35.3 (C♯6). Mask the take's status strip black, as the phone's
 // stills are.
@@ -335,7 +335,7 @@ struct Typing060: View {
     }.canvas()
 }
 
-// SWAP-IN (S11, take E part 1): replace with Noah's clip E if provided at /Users/noah/Downloads/sill-handoff/release-060/captures/take-E.mov, inside Keys060's iPad in
+// SWAP-IN (S11, take E part 1): replace with Noah's clip E if provided as captures/take-E.mov, inside Keys060's iPad in
 // place of E0, the typing reveal over E1 and the E2 sheet. Marks: the first keystroke 37.2 (the picture must show by
 // then), "Typing right away." typed by 38.33, ⌘S 38.35, the sheet 38.40, Esc 39.2 (the drawn slab's esc lights and
 // "Esc" buzzes 39.30). Retime Keys060.strokes to the take's keystrokes so the slab and the clicks keep with it.
@@ -444,7 +444,7 @@ struct ScrollDoc060: View {
     }
 }
 
-// SWAP-IN (S12, take E part 2): replace with Noah's clip E if provided at /Users/noah/Downloads/sill-handoff/release-060/captures/take-E.mov (its scrolling part), inside
+// SWAP-IN (S12, take E part 2): replace with Noah's clip E if provided as captures/take-E.mov (its scrolling part), inside
 // the iPad in place of ScrollDoc060 (E3 and longdoc-page). Marks: the scroll down 40.95–41.55, back up 41.56–42.04; the
 // Settings panel (E6, then E7 at 42.8, Done at 43.05) stays the harness's stills; then a finger dragged up over the
 // picture (43.30–43.82) with Reverse Scrolling on, the document going down: the take's, if it has one, else keep the
@@ -599,7 +599,7 @@ struct ComposeStrip060: View {
     }
 }
 
-// SWAP-IN (S13, take F): replace with Noah's clip F if provided at /Users/noah/Downloads/sill-handoff/release-060/captures/take-F.mov, inside the iPad in place of F0–F4
+// SWAP-IN (S13, take F): replace with Noah's clip F if provided as captures/take-F.mov, inside the iPad in place of F0–F4
 // and ComposeStrip060. Marks: 你好 arriving on the Mac 44.40, こんにちは 45.20, 안녕하세요 46.00, the dictated sentence
 // 47.30 (each a pluck; the greetings snap 0.05 s after). Drop the drawn composition strip: the take shows iPadOS's own.
 @MainActor func s060_13(_ t: Double, _ e: Env) throws -> FrameLayers {

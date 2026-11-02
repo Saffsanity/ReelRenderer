@@ -12,7 +12,7 @@
 //   window is drawn again, titled "Sill.mp4", its elapsed time and progress those of the frame it shows (`QuickTime060`).
 // Each paint-out fills the words' box from the background around it (per column, between the rows above and below, for
 // these vertical gradients and flat fills), and the new words are Core Text in the face, size and colour fitted to the
-// old ones (the fit: wt-reel/.build/reel060/fix/bin/textfit2).
+// old ones (measured in the stills).
 import AppKit
 import CoreText
 

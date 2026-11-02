@@ -52,7 +52,7 @@ enum Events {
 // stays blurred is what the README's privacy list still forbids, none of it an app Noah cleared:
 // - VS Code's private file (R05 before the pick, clip < 1.095): σ 16 on the stream;
 // - Blender's Recent Files list (Noah's .blend names): a tight σ 12 on the names only;
-// - the strip's private thumbnails in R04 before the swipe settles (Claude's conversation, a Messages photo
+// - the strip's private thumbnails in R04 before the swipe settles (a chat app's conversation, a Messages photo
 //   and a Chrome video with faces): σ 12, easing to 0 over 22.45–22.75 as in v1;
 // - R02's Desktop around the drawer (P5) and R08's footnote bands (P7), unchanged.
 // Every mask is at full strength on its rect's edge; the feather lies outside (Clip.swift `mask`).

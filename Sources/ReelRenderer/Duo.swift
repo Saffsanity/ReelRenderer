@@ -5,7 +5,7 @@
 // settles closed onto the lockup's sill line with its outer display lit by the icon's window, unfolds (the
 // cover swings open about the hinge, toward the lens), the inner display lights, a glint runs round it and
 // the type snaps below the sill: "Designed for iPhone Duo." / "Both screens. Coming soon." Nothing claims
-// that Sill runs on an iPhone Duo today (CLAUDE.md L3 "designed for iPhone Duo first"; BRIEF L9–10, L82).
+// that Sill runs on an iPhone Duo today (Sill's project notes: "designed for iPhone Duo first"; its BRIEF L9–10, L82).
 import SwiftUI
 
 enum Duo {

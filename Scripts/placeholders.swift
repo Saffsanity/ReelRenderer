@@ -168,7 +168,7 @@ do {
 // "pointer path missing"). It is no recording: the capture's own script wrote it (2026-09-25) and the touch injector
 // played it while clip 13 was recorded. 516 → 352 pt (a sine ease out, 1.3 s), → 679 (a cosine ease in and out,
 // 2.3 s), → 597 (0.9 s), then a 79 × 53 pt ellipse (3.0 s), sampled every 17.5 ms, at y 1006: 428 lines, byte for
-// byte the file v3.1 read (Tools/ReelRenderer/README.md). V31.swift's `strokeX` is the same stroke, analytic.
+// byte the file v3.1 read (README.md). V31.swift's `strokeX` is the same stroke, analytic.
 
 do {
     let dt = 0.0175, y = 1006.0

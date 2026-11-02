@@ -1,5 +1,5 @@
 // Reel060.swift — the 0.6.0 update video (REEL=060): its inputs, the stills it derives from them, its copy, and its
-// timeline. The storyboard is ~/Downloads/sill-handoff/release-060/reel-0.6.0-storyboard.md (approved 2026-11-02);
+// timeline. The storyboard is reel-0.6.0-storyboard.md (approved 2026-11-02), kept with the reel's working files;
 // the shot list with the as-built numbers is design/reel/v4/SHOTLIST-0.6.0.md. 80.0 s, 50 bars at 150 BPM, 23 shots.
 //
 // Inputs, under `reelDir` (REEL_DIR; the assemble step's `.build/reel060/input`):

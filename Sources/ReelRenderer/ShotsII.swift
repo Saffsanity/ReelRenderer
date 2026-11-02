@@ -323,7 +323,7 @@ enum AaResize {
 //
 // Note 7: a fourth line in T4 hangs off "Type.", and its word "haptic" buzzes: a 3 px, 18 Hz jitter for 0.6 s
 // (36.05–36.65, on the beat after the line settles), then still. The footnote qualifies it: the trackpad's
-// haptics fire on iPhone only (CLAUDE.md L672–673: iPads have no Taptic Engine).
+// haptics fire on iPhone only (Sill's notes: iPads have no Taptic Engine).
 
 enum Haptic {
     static let lineSnap = 35.65

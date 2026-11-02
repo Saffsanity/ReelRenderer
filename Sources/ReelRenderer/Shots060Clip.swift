@@ -149,7 +149,7 @@ enum Clip060 {
     static let fadeFrom: CGFloat = 1020, fadeTo: CGFloat = 1080
 }
 
-// SWAP-IN (S04, take A part 1): replace with Noah's clip A if provided at /Users/noah/Downloads/sill-handoff/release-060/captures/take-A.mov, inside Pad060's picture in
+// SWAP-IN (S04, take A part 1): replace with Noah's clip A if provided as captures/take-A.mov, inside Pad060's picture in
 // place of the MiniScreen layers (A1, notes-plain, the drawn edit menu, ipad-notes-pasted). Marks to align the take to: ⌘C
 // pressed at the Mac 7.20 (the drawn keycaps stay and press then), Notes on the iPad 7.6, the touch and hold 7.95,
 // Paste 8.32, the line landing in Notes 8.40 (the A5 pluck). SHOTLIST-0.6.0.md §7 has the steps.
@@ -227,7 +227,7 @@ struct ChipInset060: View {
     }
 }
 
-// SWAP-IN (S05, take A part 2): replace with Noah's clip A if provided at /Users/noah/Downloads/sill-handoff/release-060/captures/take-A.mov (its second half). Marks: the
+// SWAP-IN (S05, take A part 2): replace with Noah's clip A if provided as captures/take-A.mov (its second half). Marks: the
 // touch and hold on the reply 10.55, Copy 11.05, back in Sill 11.2, the chip risen 11.55 (E5), Paste on the chip 12.0
 // (C♯6), the note "Pasted on Noah’s MacBook Pro." from 12.15. The push (11.6–12.15, to 1.14 on the chip) stays a render
 // move over the take, and so does the inset (`ChipInset060`: crop it from the take's frames, at the chip's place).
@@ -303,7 +303,7 @@ func qtToStill(_ r: CGRect) -> CGRect {
     return CGRect(x: Mini060.picture.minX + r.minX * s, y: Mini060.picture.minY + r.minY * s, width: r.width * s, height: r.height * s)
 }
 
-// SWAP-IN (S06, take B): replace with Noah's clip B if provided at /Users/noah/Downloads/sill-handoff/release-060/captures/take-B.mov, inside Sound060's iPad in place of
+// SWAP-IN (S06, take B): replace with Noah's clip B if provided as captures/take-B.mov, inside Sound060's iPad in place of
 // B1x with v3.1's film and QuickTime's drawn window, the lit Settings button and the B4/B5 panel. Marks: Settings opened
 // 16.8, Mute on 17.6, Mute off 18.4 (the score cuts the Mac's sound between them). The take's own audio is never used;
 // the arcs stay drawn.
